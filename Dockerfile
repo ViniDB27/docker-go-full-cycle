@@ -1,15 +1,9 @@
-FROM golang:alpine AS builder
+FROM ubuntu
 
 WORKDIR /app
 
 COPY main.go .
 
-RUN go mod init fullcycle
-RUN go build -o main .
+RUN apt-get update && apt-get -y install golang-go 
 
-FROM alpine
-WORKDIR /app
-
-COPY --from=builder /app/main .
-
-CMD ["./main"]
+CMD ["go", "run", "main.go"]
