@@ -1,9 +1,13 @@
-FROM ubuntu
-
+FROM golang:alpine3.14 as builder
 WORKDIR /app
 
-COPY main.go .
+COPY ./src .
 
-RUN apt-get update && apt-get -y install golang-go 
+RUN go build -ldflags "-s -w" -o main .
 
-CMD ["go", "run", "main.go"]
+FROM scratch
+WORKDIR /app
+
+COPY --from=builder /app/main .
+
+CMD ["./main"]
